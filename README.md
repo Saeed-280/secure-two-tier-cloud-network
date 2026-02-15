@@ -4,7 +4,7 @@ This project demonstrates the deployment of a secure, highly available two-tier 
 ## 📖 Detailed Documentation
 For a comprehensive, step-by-step walkthrough of every click in the AWS Console, please refer to the full technical guide:
 
-👉 **[Step-by-Step Word Document](./Secure-Two-Tier-Cloud Architecture.docx)**
+👉 **step by step instructions[Download](./Secure-Two-Tier-Cloud-Architecture.docx)**
 
 ---
 
