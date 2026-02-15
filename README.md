@@ -1,6 +1,10 @@
 # Secure Two-Tier Cloud Network (AWS Mumbai)
 
 This project demonstrates the deployment of a secure, highly available two-tier architecture in AWS. It follows the "least privilege" security model, separating public-facing web servers from protected private application layers across three Availability Zones.
+## 📖 Detailed Documentation
+For a comprehensive, step-by-step walkthrough of every click in the AWS Console, please refer to the full technical guide:
+
+👉 **[Step-by-Step Word Document](./Secure-Two-Tier-Cloud Architecture.docx)**
 
 ---
 
@@ -10,11 +14,13 @@ This project demonstrates the deployment of a secure, highly available two-tier 
 * **Name:** `Mumbai-Prod-VPC`
 * **VPC ID:** `vpc-05df659cf2f212303`
 * **IPv4 CIDR:** `10.0.0.0/16` (65,536 available IPs)
-* **Logic:** 1. **Industry Standard:** Large address space for scaling.
-    2. **Zero Cost:** Private IPs are free.
-    3. **Simple Math:** Easy to read subnet ranges.
-    4. **No IP Exhaustion:** AWS reserves 5 IPs per subnet; `/16` ensures we never run out.
-    5. **Future Proof:** Can add hundreds of subnets later for Lambda, EKS, or Dev environments.
+  
+* **Logic:**
+1. **Industry Standard:** Large address space for scaling.
+2. **Zero Cost:** Private IPs are free.
+3. **Simple Math:** Easy to read subnet ranges.
+4. **No IP Exhaustion:** AWS reserves 5 IPs per subnet; `/16` ensures we never run out.
+5. **Future Proof:** Can add hundreds of subnets later for Lambda, EKS, or Dev environments.
 
 ### Internet Gateway (IGW)
 * **Name:** `Mumbai-IGW`
@@ -46,6 +52,8 @@ I used 3 Availability Zones to ensure that even if one whole data center in Mumb
 * **Purpose:** Keeps the database tiers isolated.
 * **Route:** Local only (No route to `0.0.0.0/0`).
 * **Subnet Associations:** `private_subnet_01`, `private_subnet_02`.
+
+  ![public-vs-private-instance](images/public-vs-private-instance-with-ip-address.png)
 
 ---
 
@@ -91,17 +99,23 @@ I used 3 Availability Zones to ensure that even if one whole data center in Mumb
 Connection established via SSH using the public IP:
 `ssh -i "Mumbai-Key.pem" ec2-user@YOUR-PUBLIC-IP`
 
+ ![Web-server-connection-success](images/webserver-login-sucess-Terminal.png)
+
+
 
 ### 2. Internet Gateway Verification
 Verified outbound internet access from the public subnet:
 ```bash
 curl -I google.com
 # Result: HTTP/1.1 301 Moved Permanently (Proof of IGW & DNS Resolution)
+
 ```
+ ![Web-server-connection-curl-success](images/curl-success-webserver.png)
+
 ### 2. The "Magic" Cross-Tier Test
 Since the App Server is private and has no public IP, I used the Web Server as a **Bastion Host** (Jump Box) to verify the internal connection using `ncat`. This test confirms that the private subnet is reachable from the public subnet via the internal AWS backbone.
 
-
+ 
 
 **Execution:**
 ```bash
@@ -111,6 +125,8 @@ sudo yum install nmap-ncat -y
 # Run connectivity test to App Server Private IP
 nc -zv 10.0.3.224 22
 ```
+![Web-server-connection-curl-success](images/app-server-connection-success.png)
+
 ### 3. Alternative SSH "Success" Test
 Attempted direct SSH from Web Server to App Server:
 
@@ -122,5 +138,6 @@ Interpretation: This is a successful test. It proves the Web Server reached the 
 
 ### 📊 Infrastructure Visualization
 The following Resource Map confirms the 1:1 relationship between subnets, route tables, and the Internet Gateway.
+![VPC Resource Map](images/Vpc_resource_map.png)
 
 Successfully implemented a secure, scalable, and resilient cloud network in the Mumbai region.
